@@ -357,7 +357,7 @@
             <div class="info-box">
                 <ul>
                     <li><strong>THÔNG TIN ĐỀ KIỂM TRA:</strong> Phép cộng và trừ có nhớ (2 và 3 chữ số).</li>
-                    <li><strong>THỜI GIAN LÀM BÀI:</strong> 30 giây cho mỗi câu hỏi.</li>
+                    <li><strong>THỜI GIAN LÀM BÀI:</strong> 45 giây cho mỗi câu hỏi.</li>
                     <li><strong>SỐ CÂU:</strong> 20 câu hỏi.</li>
                     <li><strong>LƯU Ý:</strong> Tính toán cẩn thận, khi đã nộp thì không thể quay lại câu hỏi trước đó.</li>
                 </ul>
@@ -374,7 +374,7 @@
                         <circle class="timer-circle-bg" cx="30" cy="30" r="26"></circle>
                         <circle class="timer-circle" id="timer-circle" cx="30" cy="30" r="26"></circle>
                     </svg>
-                    <div class="timer-text" id="timer-text">30</div>
+                    <div class="timer-text" id="timer-text">45</div>
                 </div>
             </div>
 
@@ -467,7 +467,7 @@
         let currentIndex = 0;
         let userAnswers = [];
         let timer = null;
-        let timeLeft = 30;
+        let timeLeft = 45;
         let startTimeStr = "";
         let submitTimeStr = "";
         let startTimeObj = null;
@@ -508,7 +508,7 @@
 
         function loadQuestion() {
             clearInterval(timer);
-            timeLeft = 30;
+            timeLeft = 45;
             updateTimerDisplay();
 
             let qData = currentQuestions[currentIndex];
@@ -556,7 +556,7 @@
             document.getElementById('timer-text').innerText = timeLeft;
             let circle = document.getElementById('timer-circle');
             let circumference = 163.36;
-            let offset = circumference - (timeLeft / 30) * circumference;
+            let offset = circumference - (timeLeft / 45) * circumference;
             circle.style.strokeDashoffset = offset;
         }
 
