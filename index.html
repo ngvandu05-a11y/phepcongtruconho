@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HỆ THỐNG ÔN LUYỆN PHÉP TÍNH CÓ NHỚ</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a; /* Xanh Nauy (Navy) */
+            --primary-hover: #172554;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #cbd5e1;
+            --success-color: #16a34a;
+            --danger-color: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', 'Verdana', 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.15), 0 8px 10px -6px rgba(30, 58, 138, 0.1);
+            overflow: hidden;
+            padding: 30px;
+            position: relative;
+            border: 2px solid #e2e8f0;
+        }
+
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #334155;
+            font-size: 16px;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            border: 2px dashed var(--primary-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-box ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .student-name-tag {
+            background: #e0e7ff;
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .question-tracker {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        .timer-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+            width: 60px;
+            height: 60px;
+        }
+
+        .timer-circle-bg {
+            fill: none;
+            stroke: var(--border-color);
+            stroke-width: 6;
+        }
+
+        .timer-circle {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 6;
+            stroke-dasharray: 163.36;
+            stroke-dashoffset: 0;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-text {
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .question-label {
+            font-size: 18px;
+            color: #475569;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .math-expression {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: #eff6ff;
+            border: 2px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 20px;
+            display: inline-block;
+            width: 100%;
+            letter-spacing: 2px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+            background: white;
+            font-weight: 500;
+        }
+
+        .option-item:hover {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .option-item input {
+            margin-right: 15px;
+            transform: scale(1.3);
+            accent-color: var(--primary-color);
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .score-highlight {
+            font-size: 52px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .time-stats {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        .time-stats p {
+            margin-bottom: 6px;
+        }
+
+        .history-container {
+            max-height: 280px;
+            overflow-y: auto;
+            text-align: left;
+            margin-top: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            background: #fff;
+        }
+
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 15px;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item.correct {
+            border-left: 5px solid var(--success-color);
+            background: #f0fdf4;
+        }
+
+        .history-item.incorrect {
+            border-left: 5px solid var(--danger-color);
+            background: #fef2f2;
+        }
+
+        #fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            display: none;
+        }
+
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)); opacity: 0; }
+        }
+
+        #rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            display: none;
+            overflow: hidden;
+        }
+
+        .raindrop {
+            position: absolute;
+            background: linear-gradient(transparent, #64748b);
+            width: 2px;
+            height: 25px;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-30px); }
+            100% { transform: translateY(105vh); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="fireworks-container"></div>
+    <div id="rain-container"></div>
+
+    <div class="container">
+        <!-- TRANG MỞ ĐẦU -->
+        <div id="start-screen" class="screen active">
+            <h1>KIỂM TRA NĂNG LỰC TOÁN HỌC</h1>
+            <div style="text-align: center;">
+                <div class="student-name-tag">HỌC SINH: CẨM TIÊN</div>
+            </div>
+            <div class="info-box">
+                <ul>
+                    <li><strong>THÔNG TIN ĐỀ KIỂM TRA:</strong> Phép cộng và trừ có nhớ (2 và 3 chữ số).</li>
+                    <li><strong>THỜI GIAN LÀM BÀI:</strong> 30 giây cho mỗi câu hỏi.</li>
+                    <li><strong>SỐ CÂU:</strong> 20 câu hỏi.</li>
+                    <li><strong>LƯU Ý:</strong> Tính toán cẩn thận, khi đã nộp thì không thể quay lại câu hỏi trước đó.</li>
+                </ul>
+            </div>
+            <button class="btn" onclick="startQuiz()">BẮT ĐẦU LÀM BÀI</button>
+        </div>
+
+        <!-- TRANG LÀM BÀI -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div class="question-tracker" id="question-tracker">Câu hỏi 1 / 20</div>
+                <div class="timer-container">
+                    <svg class="timer-svg" viewBox="0 0 60 60">
+                        <circle class="timer-circle-bg" cx="30" cy="30" r="26"></circle>
+                        <circle class="timer-circle" id="timer-circle" cx="30" cy="30" r="26"></circle>
+                    </svg>
+                    <div class="timer-text" id="timer-text">30</div>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-label">TÍNH KẾT QUẢ PHÉP TÍNH SAU:</div>
+                <div class="math-expression" id="math-expression-box">29 + 18 = ?</div>
+            </div>
+            
+            <div class="options-list" id="options-list"></div>
+
+            <button class="btn" id="next-btn" onclick="nextQuestion()">CÂU TIẾP THEO</button>
+        </div>
+
+        <!-- TRANG KẾT QUẢ -->
+        <div id="result-screen" class="screen">
+            <h2>KẾT QUẢ BÀI KIỂM TRA</h2>
+            <div class="result-card">
+                <div class="student-name-tag">HỌC SINH: CẨM TIÊN</div>
+                <p>Điểm số của bạn:</p>
+                <div class="score-highlight" id="score-display">10.0</div>
+                
+                <div class="time-stats">
+                    <p><strong>Thời gian vào làm bài:</strong> <span id="start-time-val"></span></p>
+                    <p><strong>Thời gian nộp bài:</strong> <span id="submit-time-val"></span></p>
+                    <p><strong>Thời gian làm bài:</strong> <span id="duration-val"></span></p>
+                </div>
+
+                <h3 style="margin-top: 20px; font-size: 18px; text-align: left;">LỊCH SỬ BÀI LÀM:</h3>
+                <div class="history-container" id="history-container"></div>
+            </div>
+            
+            <button class="btn" style="margin-top: 20px;" onclick="resetQuiz()">LÀM LẠI</button>
+        </div>
+    </div>
+
+    <script>
+        const bank2DigitsAdd = [
+            { q: "Tính 29 + 18 = ?", options: ["47", "48", "57", "49"], correct: "47" },
+            { q: "Tính 69 + 19 = ?", options: ["78", "88", "77", "98"], correct: "88" },
+            { q: "Tính 58 + 28 = ?", options: ["97", "86", "76", "77"], correct: "86" },
+            { q: "Tính 39 + 23 = ?", options: ["50", "52", "62", "64"], correct: "62" },
+            { q: "Tính 49 + 24 = ?", options: ["72", "82", "73", "75"], correct: "73" },
+            { q: "Tính 44 + 19 = ?", options: ["51", "74", "63", "64"], correct: "63" },
+            { q: "Tính 33 + 48 = ?", options: ["91", "81", "83", "69"], correct: "81" },
+            { q: "Tính 21 + 29 = ?", options: ["60", "52", "50", "49"], correct: "50" },
+            { q: "Tính 16 + 29 = ?", options: ["75", "43", "36", "45"], correct: "45" },
+            { q: "Tính 28 + 53 = ?", options: ["61", "80", "83", "81"], correct: "81" }
+        ];
+
+        const bank2DigitsSub = [
+            { q: "Tính 71 - 46 = ?", options: ["13", "15", "25", "14"], correct: "25" },
+            { q: "Tính 60 - 51 = ?", options: ["18", "78", "9", "21"], correct: "9" },
+            { q: "Tính 81 - 57 = ?", options: ["26", "34", "36", "24"], correct: "24" },
+            { q: "Tính 32 - 24 = ?", options: ["18", "7", "19", "8"], correct: "8" },
+            { q: "Tính 34 - 28 = ?", options: ["6", "7", "16", "45"], correct: "6" },
+            { q: "Tính 90 - 46 = ?", options: ["54", "64", "55", "44"], correct: "44" },
+            { q: "Tính 82 - 44 = ?", options: ["27", "28", "29", "38"], correct: "38" },
+            { q: "Tính 54 - 27 = ?", options: ["29", "37", "39", "27"], correct: "27" },
+            { q: "Tính 61 - 19 = ?", options: ["42", "52", "31", "33"], correct: "42" },
+            { q: "Tính 92 - 76 = ?", options: ["7", "16", "15", "27"], correct: "16" }
+        ];
+
+        const bank3DigitsAdd = [
+            { q: "Tính 337 + 558 = ?", options: ["897", "885", "895", "906"], correct: "895" },
+            { q: "Tính 499 + 459 = ?", options: ["958", "960", "947", "948"], correct: "958" },
+            { q: "Tính 277 + 346 = ?", options: ["613", "625", "612", "623"], correct: "623" },
+            { q: "Tính 578 + 219 = ?", options: ["806", "797", "897", "787"], correct: "797" },
+            { q: "Tính 282 + 495 = ?", options: ["677", "877", "768", "777"], correct: "777" },
+            { q: "Tính 386 + 248 = ?", options: ["636", "624", "634", "623"], correct: "634" },
+            { q: "Tính 604 + 288 = ?", options: ["890", "792", "882", "892"], correct: "892" },
+            { q: "Tính 683 + 177 = ?", options: ["850", "871", "858", "860"], correct: "860" },
+            { q: "Tính 426 + 346 = ?", options: ["761", "763", "772", "762"], correct: "772" },
+            { q: "Tính 238 + 165 = ?", options: ["403", "503", "393", "394"], correct: "403" }
+        ];
+
+        const bank3DigitsSub = [
+            { q: "Tính 449 - 193 = ?", options: ["267", "256", "258", "356"], correct: "256" },
+            { q: "Tính 348 - 196 = ?", options: ["252", "150", "152", "141"], correct: "152" },
+            { q: "Tính 592 - 198 = ?", options: ["405", "392", "404", "394"], correct: "394" },
+            { q: "Tính 374 - 235 = ?", options: ["149", "130", "150", "139"], correct: "139" },
+            { q: "Tính 697 - 399 = ?", options: ["308", "287", "296", "298"], correct: "298" },
+            { q: "Tính 602 - 415 = ?", options: ["176", "197", "196", "187"], correct: "187" },
+            { q: "Tính 570 - 192 = ?", options: ["388", "378", "369", "278"], correct: "378" },
+            { q: "Tính 451 - 159 = ?", options: ["302", "281", "292", "283"], correct: "292" },
+            { q: "Tính 841 - 309 = ?", options: ["432", "542", "532", "530"], correct: "532" },
+            { q: "Tính 628 - 479 = ?", options: ["149", "160", "151", "159"], correct: "149" }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = [];
+        let timer = null;
+        let timeLeft = 30;
+        let startTimeStr = "";
+        let submitTimeStr = "";
+        let startTimeObj = null;
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function getRandomElements(arr, n) {
+            return shuffleArray(arr).slice(0, n);
+        }
+
+        function startQuiz() {
+            let selected2Add = getRandomElements(bank2DigitsAdd, 5);
+            let selected2Sub = getRandomElements(bank2DigitsSub, 5);
+            let selected3Add = getRandomElements(bank3DigitsAdd, 5);
+            let selected3Sub = getRandomElements(bank3DigitsSub, 5);
+
+            currentQuestions = shuffleArray([...selected2Add, ...selected2Sub, ...selected3Add, ...selected3Sub]);
+            
+            currentIndex = 0;
+            userAnswers = new Array(currentQuestions.length).fill(null);
+
+            let now = new Date();
+            startTimeObj = now;
+            startTimeStr = now.toLocaleTimeString() + " - " + now.toLocaleDateString();
+
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('quiz-screen').classList.add('active');
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(timer);
+            timeLeft = 30;
+            updateTimerDisplay();
+
+            let qData = currentQuestions[currentIndex];
+            document.getElementById('question-tracker').innerText = `Câu hỏi ${currentIndex + 1} / 20`;
+            
+            let expression = qData.q.replace("Tính ", "");
+            document.getElementById('math-expression-box').innerText = expression;
+
+            let shuffledOptions = shuffleArray(qData.options);
+            let optionsHtml = '';
+            
+            shuffledOptions.forEach((opt, idx) => {
+                optionsHtml += `
+                    <label class="option-item">
+                        <input type="radio" name="answer" value="${opt}" id="opt-${idx}">
+                        <span>${opt}</span>
+                    </label>
+                `;
+            });
+
+            document.getElementById('options-list').innerHTML = optionsHtml;
+
+            let nextBtn = document.getElementById('next-btn');
+            if (currentIndex === currentQuestions.length - 1) {
+                nextBtn.innerText = "NỘP BÀI";
+            } else {
+                nextBtn.innerText = "CÂU TIẾP THEO";
+            }
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timer-text').innerText = timeLeft;
+            let circle = document.getElementById('timer-circle');
+            let circumference = 163.36;
+            let offset = circumference - (timeLeft / 30) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function nextQuestion() {
+            let selectedOption = document.querySelector('input[name="answer"]:checked');
+            userAnswers[currentIndex] = selectedOption ? selectedOption.value : null;
+
+            currentIndex++;
+            if (currentIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            clearInterval(timer);
+            let now = new Date();
+            submitTimeStr = now.toLocaleTimeString() + " - " + now.toLocaleDateString();
+
+            let durationSeconds = Math.floor((now - startTimeObj) / 1000);
+            let minutes = Math.floor(durationSeconds / 60);
+            let seconds = durationSeconds % 60;
+            let durationStr = `${minutes} phút ${seconds} giây`;
+
+            let correctCount = 0;
+            let historyHtml = '';
+            let detailsPayload = [];
+            let submissionId = "SUB_" + Date.now();
+            let studentName = "CẨM TIÊN";
+
+            currentQuestions.forEach((item, index) => {
+                let userAns = userAnswers[index];
+                let isCorrect = (userAns === item.correct);
+                if (isCorrect) correctCount++;
+
+                let statusClass = isCorrect ? 'correct' : 'incorrect';
+                let statusText = isCorrect ? '<span style="color:var(--success-color); font-weight:bold;">ĐÚNG</span>' : '<span style="color:var(--danger-color); font-weight:bold;">SAI</span>';
+                let itemScore = isCorrect ? 0.5 : 0.0;
+
+                historyHtml += `
+                    <div class="history-item ${statusClass}">
+                        <p><strong>Câu ${index + 1}:</strong> ${item.q}</p>
+                        <p>Thí sinh chọn: <strong>${userAns !== null ? userAns : "Không chọn"}</strong> | Đáp án đúng: <strong>${item.correct}</strong></p>
+                        <p>Kết quả: ${statusText}</p>
+                    </div>
+                `;
+
+                detailsPayload.push({
+                    questionIndex: "Câu " + (index + 1),
+                    questionText: item.q,
+                    correctAnswer: item.correct,
+                    userAnswer: userAns !== null ? userAns : "Không chọn",
+                    status: isCorrect ? "ĐÚNG" : "SAI",
+                    score: itemScore
+                });
+            });
+
+            let finalScore = (correctCount * 0.5).toFixed(1);
+            let scoreNum = parseFloat(finalScore);
+
+            document.getElementById('score-display').innerText = finalScore;
+            document.getElementById('start-time-val').innerText = startTimeStr;
+            document.getElementById('submit-time-val').innerText = submitTimeStr;
+            document.getElementById('duration-val').innerText = durationStr;
+            document.getElementById('history-container').innerHTML = historyHtml;
+
+            document.getElementById('quiz-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
+
+            let payload = {
+                submissionId: submissionId,
+                studentName: studentName,
+                startTime: startTimeStr,
+                submitTime: submitTimeStr,
+                totalScore: finalScore,
+                details: detailsPayload
+            };
+
+            // ĐÃ TÍCH HỢP SẴN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
+            let webAppUrl = "https://script.google.com/macros/s/AKfycbwMsH7crDWQiIOKjhMAeCnjeCxyX9HWBFpmcFDC2R8bBigwWDkmbyAKbCWxuytzO9k5/exec";
+
+            fetch(webAppUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                console.log("Đã gửi dữ liệu bài làm lên Google Sheets thành công!");
+            }).catch(error => {
+                console.error("Lỗi khi gửi dữ liệu:", error);
+            });
+
+            if (scoreNum >= 9.0) {
+                triggerFireworks();
+            } else if (scoreNum < 8.5) {
+                triggerRain();
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('result-screen').classList.remove('active');
+            document.getElementById('start-screen').classList.add('active');
+            
+            document.getElementById('fireworks-container').style.display = 'none';
+            document.getElementById('fireworks-container').innerHTML = '';
+            document.getElementById('rain-container').style.display = 'none';
+            document.getElementById('rain-container').innerHTML = '';
+        }
+
+        function triggerFireworks() {
+            const container = document.getElementById('fireworks-container');
+            container.style.display = 'block';
+            container.innerHTML = '';
+
+            for (let i = 0; i < 50; i++) {
+                let firework = document.createElement('div');
+                firework.classList.add('firework');
+                
+                firework.style.left = window.innerWidth / 2 + 'px';
+                firework.style.top = window.innerHeight / 2 + 'px';
+                firework.style.setProperty('--x', (Math.random() * 600 - 300) + 'px');
+                firework.style.setProperty('--y', (Math.random() * 600 - 300) + 'px');
+                
+                const colors = ['#1e3a8a', '#3b82f6', '#f59e0b', '#10b981', '#ef4444'];
+                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(firework);
+            }
+
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 2500);
+        }
+
+        function triggerRain() {
+            const container = document.getElementById('rain-container');
+            container.style.display = 'block';
+            container.innerHTML = '';
+
+            for (let i = 0; i < 60; i++) {
+                let raindrop = document.createElement('div');
+                raindrop.classList.add('raindrop');
+                
+                raindrop.style.left = Math.random() * window.innerWidth + 'px';
+                raindrop.style.top = -Math.random() * 100 + 'px';
+                raindrop.style.animationDuration = (0.5 + Math.random() * 0.8) + 's';
+                raindrop.style.animationDelay = (Math.random() * 2) + 's';
+                
+                container.appendChild(raindrop);
+            }
+
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
